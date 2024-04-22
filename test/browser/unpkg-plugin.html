@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>browser test</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+        #blocklyDiv {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="../../dist/multiselect.js"></script>
+</head>
+
+<body>
+    <div id="blocklyDiv"></div>
+
+    <script>
+        function createWorkspace(blocklyDiv, options) {
+            const pluginOptions = {
+                copyPasteToStorage: true,     // Use local storage to persist copied blocks between sessions and across tabs
+                copyPasteToClipboard: true,   // `false` prevents use of system clipboard
+                hideDisabledMenuItems: false, // `false` greys out disabled menu options, `true` hides them completely
+                enableBlockMenu: true,        // Adds a custom context menu for blocks (only when multiselect is active)
+                blockScope: {
+                    // movable: true,
+                },
+                enableWorkspaceMenu: true, // Replaces Blockly's default workspace context menu (only when multiselect is inactive)
+                workspaceScope: {
+                    // select: false,
+                },
+                multiselectScope: {
+                    // redo: true,
+                },
+            };
+            const workspace = Blockly.inject(blocklyDiv, options); // hardcoded blocklyDiv
+            const plugin = new multiselect.MultiselectPlugin(pluginOptions, workspace);
+            plugin.init();
+
+            return workspace;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const toolbox = {
+                "kind": "flyoutToolbox",
+                "contents": [
+                    {
+                        "kind": "block",
+                        "type": "controls_if"
+                    },
+                    {
+                        "kind": "block",
+                        "type": "controls_whileUntil"
+                    }
+                ]
+            };
+
+            createWorkspace(document.getElementById("blocklyDiv"), {
+                toolbox: toolbox,
+            });
+        });
+    </script>
+</body>
+
+</html>
