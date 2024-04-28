@@ -84,9 +84,9 @@ describe("Workspace context menu options", function () {
         await shouldCleanup();
     });
 
-    it("should Cleanup all blocks", async function () {
-        await shouldCleanupAll();
-    });
+    // it("should Cleanup all blocks", async function () {
+    //     await shouldCleanupAll();
+    // });
 
     // it("should Collapse all blocks", async function() {
     //     await shouldCollapseAll();

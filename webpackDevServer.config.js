@@ -9,7 +9,7 @@ module.exports = {
             directory: path.join(__dirname, "/"), // Root directory with static pages
         },
         // compress: true,
-        // port: 8080, // Port to listen on (default?)
+        // port: 8080, // is this default?
         port: "auto",
         hot: true,
         watchFiles: {

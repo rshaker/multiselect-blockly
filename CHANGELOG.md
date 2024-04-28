@@ -16,7 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-None
+### Fixed
+
+- Corrected unpkg url (again) for multiselect.js in README.md.
+- Corrected webpack's `externals`, was causing "duplicate module w/different case" warnings. 
+
+### Added
+
+- Added "registry":"https://npm.pkg.github.com/" to package.json, allows npm to publish package to github.
+
+## [0.3.1] - 2024-04-22
+
+### Fixed
+
+- Corrected unpkg url for muliselect.js in readme doc.
 
 ## [0.3.0] - 2024-04-22
 

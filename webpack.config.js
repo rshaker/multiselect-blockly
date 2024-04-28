@@ -1,14 +1,18 @@
 const path = require("path");
 const webpack = require("webpack");
 
-// Function to determine externals based on the entry name
+// Determine externals based on the entry name
 function determineExternals(entryName) {
     switch (entryName) {
         case "multiselect":
-            // Don't bundle Blockly with the plugin, else expect unexplainable weird errors
+            // Don't bundle blockly libs with the plugin
             return {
-                "blockly/core": "Blockly",
-                "blockly/core/serialization/blocks": "Blockly.serialization.blocks",
+                "blockly/core": {
+                    root: "Blockly",
+                    commonjs: "blockly/core",
+                    commonjs2: "blockly/core",
+                    amd: "blockly/core",
+                },
             };
         default:
             return {};

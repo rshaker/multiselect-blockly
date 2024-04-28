@@ -1,5 +1,7 @@
 
-# multiselect-blockly [![Built on Blockly](https://tinyurl.com/built-on-blockly)](https://github.com/google/blockly)
+# multiselect-blockly 
+
+[![Built on Blockly](https://tinyurl.com/built-on-blockly)](https://github.com/google/blockly)
 
 A [Blockly](https://www.npmjs.com/package/blockly) plugin that allows for simultaneous selection and manipulation of multiple top-level blocks. Operations include: copy, paste, delete, duplicate, expand, collapse, inline, arrange, toggle a block's movability, editability, deletability, etc ...
 
@@ -14,22 +16,22 @@ npm install @rshaker/multiselect-blockly
 
 ### unpkg
 ```html
-<script src="https://unpkg.com/@rshaker/multiselect-blockly/multiselect.js"></script>
+<script src="https://unpkg.com/@rshaker/multiselect-blockly/dist/multiselect.js"></script>
 ```
 
 ## Usage
 
 The following examples show how to inject the plugin into a Blockly workspace.
 
-Using node:
+### Using node:
 
-```html
+```js
 TBW
 ```
 
-See [test/workspace/index.ts](test/workspace/index.ts) for another node example. A live demo is located [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
+See [test/workspace/index.ts](test/workspace/index.ts) for another node example, the live demo is [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
 
-Using a browser:
+### Using a browser:
 
 ```html
 <!doctype html>
@@ -52,7 +54,7 @@ Using a browser:
 
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/@rshaker/multiselect-blockly/dist/multiselect.js"></script>
-    <!-- <script defer src="dist/multiselect.js"></script> -->
+    <!-- For local development use <script defer src="dist/multiselect.js"></script> -->
 
     <script>
       function createWorkspace(blocklyDiv, options) {
