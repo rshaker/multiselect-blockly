@@ -15,6 +15,9 @@
         "type": "git",
         "url": "https://github.com/rshaker/multiselect-blockly.git"
     },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
     "homepage": "https://github.com/rshaker/multiselect-blockly",
     "keywords": [
         "blockly",
@@ -69,13 +72,10 @@
         "webpack-cli": "^4.0.0",
         "webpack-dev-server": "^4.15.1"
     },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
+    "peerDependencies": {
+        "blockly": "^10.4.3"
     },
     "eslintConfig": {
         "extends": "@blockly/eslint-config"
-    },
-    "peerDependencies": {
-        "blockly": "^10.4.3"
     }
 }
