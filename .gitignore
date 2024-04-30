@@ -21,6 +21,9 @@
 # administrative scripts
 /admin
 
+# ignore test output
+/test/**/*.mp4
+
 # misc
 .DS_Store
 .env.local
