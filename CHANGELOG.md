@@ -9,6 +9,7 @@ Types of changes:
 - **Deprecated** for soon-to-be removed features.
 - **Removed** for now removed features.
 - **Fixed** for any bug fixes.
+- **Publish** new version to npm and github.
 - **Security** in case of vulnerabilities.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
@@ -16,14 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
+## [0.3.2] - 2024-04-29
 
-- Corrected unpkg url (again) for multiselect.js in README.md.
-- Corrected webpack's `externals`, was causing "duplicate module w/different case" warnings. 
+### Publish
 
-### Added
-
-- Added "registry":"https://npm.pkg.github.com/" to package.json, allows npm to publish package to github.
+* v0.3.2
 
 ## [0.3.1] - 2024-04-22
 

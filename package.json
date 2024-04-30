@@ -1,6 +1,6 @@
 {
     "name": "@rshaker/multiselect-blockly",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Blockly plugin supporting multiple-selection of top-level blocks",
     "license": "MIT",
     "author": {
@@ -16,7 +16,6 @@
         "url": "https://github.com/rshaker/multiselect-blockly.git"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
     },
     "homepage": "https://github.com/rshaker/multiselect-blockly",
     "keywords": [
