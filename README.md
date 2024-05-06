@@ -26,10 +26,14 @@ The following examples show how to inject the plugin into a Blockly workspace.
 ### Using node:
 
 ```js
-TBW
+import * as Blockly from "blockly/core";
+import { MultiselectPlugin } from "@rshaker/multiselect-blockly";
+
+const plugin = new MultiselectPlugin({}, workspace);
+plugin.init();
 ```
 
-See [test/workspace/index.ts](test/workspace/index.ts) for another node example, the live demo is [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
+See [test/workspace/index.ts](https://github.com/rshaker/multiselect-blockly/blob/main/test/workspace/index.ts) for a more comprehensive example, the live demo is [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
 
 ### Using a browser:
 
@@ -76,6 +80,7 @@ See [test/workspace/index.ts](test/workspace/index.ts) for another node example,
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        // Define a simple toolbox
         const toolbox = {
           kind: "flyoutToolbox",
           contents: [
