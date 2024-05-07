@@ -1,6 +1,6 @@
 {
     "name": "@rshaker/multiselect-blockly",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "Blockly plugin supporting multiple-selection of top-level blocks",
     "license": "MIT",
     "author": {

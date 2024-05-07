@@ -17,13 +17,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.3.3] - 2024-05-07
+
+### Added
+
 - Added simple node example to README.md
+
+### Publish
+
+- v0.3.3
 
 ## [0.3.2] - 2024-04-29
 
 ### Publish
 
-* v0.3.2
+- v0.3.2
 
 ## [0.3.1] - 2024-04-22
 
