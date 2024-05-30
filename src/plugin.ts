@@ -151,18 +151,21 @@ export class MultiselectPlugin {
         return this.blockly;
     }
 
-    protected getDraggableElement(element: HTMLElement, topLevel: boolean = true): SVGElement | null {
-        while (element && this.blocklyBlockCanvas.contains(element)) {
-            // Find either the 1st, or top-level block
-            if (
-                element.classList.contains("blocklyDraggable") &&
-                (!topLevel || element.parentElement === this.blocklyBlockCanvas)
-            ) {
-                return element as unknown as SVGElement;
+    /**
+     * Given an element, return the first ancestor of element (or self) that is a child of blocklyBlockCanvas.
+     * If the element is not a descendant of the blocklyBlockCanvas, return null.
+     * Otherwise, return the first ancestor of element (or self) that is a child of blocklyBlockCanvas.
+     */
+    protected getDraggableElement(element: HTMLElement): SVGElement | null {
+        if (element === null || !this.blocklyBlockCanvas.contains(element)) {
+            return null;
+        } else {
+            let currElement = element;
+            while (currElement.parentElement !== this.blocklyBlockCanvas) {
+                currElement = currElement.parentElement;
             }
-            element = element.parentElement;
+            return currElement as unknown as SVGElement;
         }
-        return null; // Shouldn't happen?
     }
 
     protected getHtmlElement(name: string, maxWait = 5000): Promise<HTMLElement> {
@@ -299,7 +302,7 @@ export class MultiselectPlugin {
 
     protected handlePointerDown(e: PointerEvent) {
         const elementBeneath = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-        const topElement = this.getDraggableElement(elementBeneath, true);
+        const topElement = this.getDraggableElement(elementBeneath);
         const blockId = topElement ? topElement.getAttribute("data-id") : null;
 
         // Handle click on background
@@ -501,10 +504,10 @@ export class MultiselectPlugin {
         this.filterEnable(svgElement, selected);
     }
 
-    selectAll(all: boolean) {
+    selectAll(select: boolean) {
         const blocks = this.workspace.getTopBlocks(false);
         blocks.forEach((block) => {
-            this.select(block.id, all);
+            this.select(block.id, select);
         });
     }
 
