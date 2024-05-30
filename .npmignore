@@ -17,6 +17,7 @@
 
 # garbage
 /tmp
+/work
 
 # administrative scripts
 /admin

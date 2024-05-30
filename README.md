@@ -29,84 +29,59 @@ The following examples show how to inject the plugin into a Blockly workspace.
 import * as Blockly from "blockly/core";
 import { MultiselectPlugin } from "@rshaker/multiselect-blockly";
 
+const workspace = Blockly.getMainWorkspace();
 const plugin = new MultiselectPlugin({}, workspace);
+
 plugin.init();
 ```
 
-See [test/workspace/index.ts](https://github.com/rshaker/multiselect-blockly/blob/main/test/workspace/index.ts) for a more comprehensive example, the live demo is [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
+See [test/workspace/index.ts](https://github.com/rshaker/multiselect-blockly/blob/main/test/workspace/index.ts) for a complete example, the live demo is [here](https://rshaker.github.io/multiselect-blockly/test/workspace).
 
 ### Using a browser:
 
 ```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>browser test</title>
-    <style>
-      html, body {
-        margin: 0;
-      }
-      #blocklyDiv {
-        height: 100vh;
-        width: 100vw;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="blocklyDiv"></div>
+<div id="blocklyDiv"></div>
 
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/@rshaker/multiselect-blockly/dist/multiselect.js"></script>
-    <!-- For local development use <script defer src="dist/multiselect.js"></script> -->
+<script src="https://unpkg.com/blockly/blockly.min.js"></script>
+<script src="https://unpkg.com/@rshaker/multiselect-blockly/dist/multiselect.js"></script>
 
-    <script>
-      function createWorkspace(blocklyDiv, options) {
-        const pluginOptions = {
-          copyPasteToStorage: true,     // Use local storage for cross-tab & between-session persistance
-          copyPasteToClipboard: true,   // `false` prevents use of system clipboard
-          hideDisabledMenuItems: false, // `false` greys out disabled menu options, `true` hides them
-          enableBlockMenu: true,        // Enable custom block menu (multiselect mode only)
-          enableWorkspaceMenu: true,    // Enable custom workspace menu (single-select mode only)
-        };
-        const workspace = Blockly.inject(blocklyDiv, options);
-        const plugin = new multiselect.MultiselectPlugin(
-          pluginOptions,
-          workspace,
-        );
-        plugin.init();
+<script>
+  function createWorkspace(blocklyDiv, options) {
+    const pluginOptions = {
+      hideDisabledMenuItems: true, // `false` greys out disabled menu options, `true` hides them
+    };
+    const workspace = Blockly.inject(blocklyDiv, options);
+    const plugin = new multiselect.MultiselectPlugin(
+      pluginOptions,
+      workspace,
+    );
+    plugin.init();
 
-        return workspace;
-      }
+    return workspace;
+  }
 
-      document.addEventListener("DOMContentLoaded", function () {
-        // Define a simple toolbox
-        const toolbox = {
-          kind: "flyoutToolbox",
-          contents: [
-            {
-              kind: "block",
-              type: "controls_if",
-            },
-            {
-              kind: "block",
-              type: "controls_whileUntil",
-            },
-          ],
-        };
+  document.addEventListener("DOMContentLoaded", function () {
+    const toolbox = {
+      kind: "flyoutToolbox",
+      contents: [
+        {
+          kind: "block",
+          type: "controls_if",
+        },
+      ],
+    };
 
-        createWorkspace(document.getElementById("blocklyDiv"), {
-          toolbox: toolbox,
-        });
-      });
-    </script>
-  </body>
-</html>
+    createWorkspace(document.getElementById("blocklyDiv"), {
+      toolbox: toolbox,
+    });
+  });
+</script>
 ```
+See [test/browser/unpkg-plugin.html](https://github.com/rshaker/multiselect-blockly/blob/main/test/browser/unpkg-plugin.html) for a complete example, the live demo is <a href="https://rshaker.github.io/multiselect-blockly/test/browser/unpkg-plugin.html">here</a>.
 
 ## Compatibility
 
-This plugin is currently compatible only with the most recent versions of Chromium-based browsers. I hope to add testing for Safari and Firefox shortly, this package is still under active development, expect instability.
+This plugin is currently compatible only with the most recent versions of Chrome. I hope to add testing for Edge, Safari and Firefox shortly, this package is still under active development, expect instability and bugs.
 
 ## License
 MIT
