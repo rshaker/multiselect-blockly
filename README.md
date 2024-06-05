@@ -3,9 +3,11 @@
 
 [![Built on Blockly](https://tinyurl.com/built-on-blockly)](https://github.com/google/blockly)
 
-A [Blockly](https://www.npmjs.com/package/blockly) plugin that allows for simultaneous selection and manipulation of multiple top-level blocks. Operations include: copy, paste, delete, duplicate, expand, collapse, inline, arrange, toggle a block's movability, editability, deletability, etc ...
+A [Blockly](https://www.npmjs.com/package/blockly) plugin that allows for simultaneous selection and manipulation of multiple top-level blocks. Common operations include copy, paste, delete, duplicate, expand, collapse, inline, arrange--The usual Blockly actions, but for more than *one* block. Block settings such as movable, editable, and deletable may also be toggled on or off using the the same set of context menu actions.
 
-To activate multiselect mode, either shift-click on a block *or* use the rectangular selection tool (shift-click-drag). Clicking on the background or any unselected block will exit multiselect mode.
+To activate multiselect mode, shift-click on a block *or* use the rectangular selection tool (shift-click-drag on background). Selected blocks will appear grey. Clicking on the background or any unselected block will deactivate multiselect mode.
+
+<img src="https://gist.github.com/assets/448495/89b6415c-ba35-49b4-894d-f4f13871f8f7">
 
 ## Installation
 
