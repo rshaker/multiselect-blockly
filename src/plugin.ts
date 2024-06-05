@@ -409,17 +409,25 @@ export class MultiselectPlugin {
         } else {
             // Handle left-click on block
             if (this.isSelected(blockId)) {
-                // Handle drag-start for all selected blocks
-                this.isDragging = true;
-                this.multiselectCoords.clear();
-                this.multiselectIds.forEach((blockId) => {
-                    this.multiselectCoords.set(blockId, this.workspace.getBlockById(blockId).getRelativeToSurfaceXY());
-                });
-                this.startPtrCoords = Blockly.utils.svgMath.screenToWsCoordinates(
-                    this.workspace,
-                    new Blockly.utils.Coordinate(e.clientX, e.clientY)
-                );
-                e.stopPropagation();
+                const block = this.workspace.getBlockById(blockId);
+                if (block.isMovable()) {
+                    // Handle drag-start for all selected blocks.
+                    // The outcome of dragging depends on the which block the cursor is over.
+                    // If the block is 'not movable', none of the selected blocks will move (pans workspace instead).
+                    // Otherwise, all selected blocks will move since the block under the cursor is 'movable'.
+                    // This logic is subject to change in the future.
+                    this.isDragging = true;
+                    this.multiselectCoords.clear();
+                    this.multiselectIds.forEach((blockId) => {
+                        this.multiselectCoords.set(blockId, this.workspace.getBlockById(blockId).getRelativeToSurfaceXY());
+                    });
+                    this.startPtrCoords = Blockly.utils.svgMath.screenToWsCoordinates(
+                        this.workspace,
+                        new Blockly.utils.Coordinate(e.clientX, e.clientY)
+                    );
+                    e.stopPropagation();
+                }
+
             } else {
                 // Handle left-click on unselected block, then let Blockly handle it
                 this.selectAll(false);
