@@ -7,7 +7,7 @@ A [Blockly](https://www.npmjs.com/package/blockly) plugin that allows for simult
 
 To activate multiselect mode, shift-click on a block *or* use the rectangular selection tool (shift-click-drag on background). Selected blocks will appear grey. Clicking on the background or any unselected block will deactivate multiselect mode.
 
-<img src="https://gist.github.com/assets/448495/89b6415c-ba35-49b4-894d-f4f13871f8f7">
+<img src="https://raw.githubusercontent.com/rshaker/multiselect-blockly/main/assets/plugin-all.png">
 
 ## Installation
 
