@@ -17,6 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.3.4] - 2024-06-05
+
+### Added / Changed / Fixed
+
+- Changed image url, gists are not allowed.
+- Added check for 'movable' before dragging selected block.
+- Created /assets folder + added screenshots for README, updated package explanation.
+- Replaced blocklyDraggable check w/parent != blocklyBlockCanvas.
+- Updated example in README, + minor .ignore changes.
+
+### Publish
+
+- v0.3.4
+
 ## [0.3.3] - 2024-05-07
 
 ### Added
