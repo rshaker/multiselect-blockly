@@ -48,6 +48,10 @@
     "files": [
         "dist"
     ],
+    "overrides": {
+        "ws": "^8.18.0",
+        "braces": "^3.0.3"
+    },
     "devDependencies": {
         "@blockly/dev-scripts": "^3.1.1",
         "@blockly/dev-tools": "^7.1.8",
