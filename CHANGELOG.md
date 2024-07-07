@@ -17,7 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.3.6] - 2024-07-07
+
+- Upgraded 2 packages for sub-dependencies: ws, braces
+
+## [0.3.5] - 2024-06-05
+
+- Tweaked images in README
+
 ## [0.3.4] - 2024-06-05
+
+- Changed image url, gists are not allowed
+- Added check for 'movable' before dragging selected block
+- Replaced blocklyDraggable check w/parent != blocklyBlockCanvas
+- Updated example in README, + minor .ignore changes
 
 ### Added / Changed / Fixed
 
@@ -27,35 +40,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced blocklyDraggable check w/parent != blocklyBlockCanvas.
 - Updated example in README, + minor .ignore changes.
 
-### Publish
-
-- v0.3.4
-
 ## [0.3.3] - 2024-05-07
-
-### Added
 
 - Added simple node example to README.md
 
-### Publish
-
-- v0.3.3
-
 ## [0.3.2] - 2024-04-29
 
-### Publish
-
-- v0.3.2
-
 ## [0.3.1] - 2024-04-22
-
-### Fixed
 
 - Corrected unpkg url for muliselect.js in readme doc.
 
 ## [0.3.0] - 2024-04-22
-
-### Changed
 
 - Fixed possible null document.getElementById('blocklyDiv') in playground and workspace html pages.
 - Fixed double-inclusion of Blockly modules using an entry name-based 'externals' property in Webpack.
