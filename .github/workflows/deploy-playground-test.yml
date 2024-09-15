@@ -39,8 +39,8 @@ jobs:
       - name: Install node dependencies
         run: npm i
 
-      - name: Clean, compile, and bundle test playground
-        run: npm run build
+      - name: Clean, compile, and bundle test playground (not available in prod build, use dev)
+        run: npm run dev
 
       # Disable all timeouts, and don't try to programmatically generate dom events because it won't work...
       - name: Run tests without Puppeteer
