@@ -17,6 +17,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+None
+
+## [0.4.0] - 2024-09-14
+
+Major refactoring and tool replacements in this release.
+
+Puppeteer was removed in favor of Playwright. This removed the need for puppeteer-screen-recorder
+as Playwright has built-in recording support in the form of webp animations.
+PW supports cross-browser testing and includes its own test framework, allowing you to run tests
+on multiple browsers like Chromium, Firefox, and WebKit, all "out of the box".
+
+OptionMgr is a new singleton class that's used to control the behavior of plugin.
+It understands JSON for both setting and getting a plugin's properties.
+
+OptionMgr is being used to facilitate integration with bf2042-ext. That web extension
+lets users modify multiselect-blockly's settings (via OptionMgr API) and persist them across sessions.
+API metadata will be used by bf2042-ext in labeling option properties and actions in its UI.
+
+- Removed mochajs and puppeteer frameworks along with their test cases.
+- Added jest and playwright frameworks, began writing e2e and unit tests.
+- Replaced toolbox categories used in test/workspace app.
+- Recreated blocks.json test fixture, added new 'recon' report to help identify testing coordinates.
+- Added API description metadata for all of plugin's get/set/do functions.
+- Removed plugin "flags" and replaced them with an OptionMgr (needed for bf2042 integration).
+- Split tsconfig into -base, -dev and -prod configs, removed source map and logging from prod build.
+- Refactored webpack.config to support tsconfig changes, also added Terser plugin.
+- Removed unnecessary rules from .gitignore.
+- Changed npm run scripts to reflect changes to project.
+- Pinned version of 'unpkg.com/blockly@10.4.3/blockly.min.js' for browser test cases.
+- Updated 'test/browser/unpkg-plugin.html' to use OptionsMgr.
+
 ## [0.3.6] - 2024-07-07
 
 - Upgraded 2 packages for sub-dependencies: ws, braces

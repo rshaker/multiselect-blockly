@@ -1,8 +1,53 @@
 import * as Blockly from "blockly/core";
 import { MultiselectPlugin } from "./plugin";
-import { MenuItemLabels, CustomContextMenuOption, BlockScopeFlags, CombinedScope, MultiScopeFlags, WorkspaceScopeFlags, WorkspaceScopeFlagKeys, BlockScopeFlagKeys, MultiScopeFlagKeys } from "./types";
+import { BlockScope, WorkspaceScope, MultiScope } from "./options";
 import * as api from "./api";
 import { isNode } from "./util";
+import { OptionsMgr } from "./options";
+
+// Required for custom context menu options (e.g. sort)
+export interface CustomContextMenuOption extends Blockly.ContextMenuRegistry.ContextMenuOption {
+    sort?: string,
+}
+
+// Define a new scope type, then combine it with Blockly's built-in scopes
+export interface CombinedScope extends Blockly.ContextMenuRegistry.Scope {
+    multiselect?: Blockly.BlockSvg[];
+    /**
+     These are what's already defined in Blockly's `ContextMenuRegistry.Scope`:
+        block?: BlockSvg;
+        workspace?: WorkspaceSvg;
+     */
+}
+
+export const MenuItemLabels = {
+    cleanup_all: "Cleanup All",
+    cleanup: "Cleanup",
+    collapse_all: "Collapse all",
+    collapse: "Collapse",
+    comment: "Comment",
+    copy: "Copy",
+    delete_all: "Delete All",
+    delete: "Delete",
+    duplicate: "Duplicate",
+    expand_all: "Expand all",
+    expand: "Expand",
+    external: "External",
+    help: "Help",
+    inline: "Inline",
+    paste: "Paste",
+    redo: "Redo",
+    reset: "Reset",
+    select_all: "Select all",
+    set_deletable: "Set deletable",
+    set_editable: "Set editable",
+    set_movable: "Set movable",
+    set_undeletable: "Set undeletable",
+    set_uneditable: "Set uneditable",
+    set_unmovable: "Set unmovable",
+    uncomment: "Uncomment",
+    undo: "Undo",
+};
 
 // Option menu items are grouped by weight, and groups are optionally separated by a <hr> element.
 const weights: { [key: string]: number } = {};
@@ -36,13 +81,14 @@ weights[MenuItemLabels.help] = 13;
 // All context menus are managed by this plugin, except when they're punted to Blockly's default context menu
 export function customShowContextMenu(plugin: MultiselectPlugin, e: Event, scope: CombinedScope): CustomContextMenuOption[] {
     const blockly = plugin.getBlockly();
-    const pluginFlags = plugin.getOptions();
+    const pluginOptions = OptionsMgr.getInstance().getOptions();
+
     // const blockScopeType = blockly.ContextMenuRegistry.ScopeType.BLOCK;
     const workspaceScopeType = blockly.ContextMenuRegistry.ScopeType.WORKSPACE;
     let menuOptions: CustomContextMenuOption[] = [];
 
     if (scope.block) {
-        if (pluginFlags.enableBlockMenu) {
+        if (pluginOptions.enableBlockMenu) {
             // Use our custom options for block context menu
             menuOptions = createMenuOptions(plugin, scope);
             blockly && blockly.ContextMenu.show(e, menuOptions, false);
@@ -54,7 +100,7 @@ export function customShowContextMenu(plugin: MultiselectPlugin, e: Event, scope
             blockly && blockly.ContextMenu.show(e, menuOptions, false);
         }
     } else if (scope.workspace) {
-        if (pluginFlags.enableWorkspaceMenu) {
+        if (pluginOptions.enableWorkspaceMenu) {
             // Use our custom options for workspace context menu
             menuOptions = createMenuOptions(plugin, scope);
             blockly && blockly.ContextMenu.show(e, menuOptions, false);
@@ -77,28 +123,29 @@ export function customShowContextMenu(plugin: MultiselectPlugin, e: Event, scope
 }
 
 export function createMenuOptions(plugin: MultiselectPlugin, scope: CombinedScope): CustomContextMenuOption[] {
-    const pluginFlags = plugin.getOptions();
-    let combinedFlags: BlockScopeFlags | WorkspaceScopeFlags | MultiScopeFlags;
-    
-    // Combined flags are an attempt to reduce the amount of repeated code... it's an experiment in micro-over-complexity
+    const pluginOptions = OptionsMgr.getInstance().getOptions();
+
+    let scopedOptions: BlockScope | WorkspaceScope | MultiScope;
+
+    // Determine which set of plugin options to use based on the scope
     if (scope.block) {
-        combinedFlags = pluginFlags.blockScope ?? {};
+        scopedOptions = pluginOptions.blockScope ?? {};
     } else if (scope.workspace) {
-        combinedFlags = pluginFlags.workspaceScope ?? {};
+        scopedOptions = pluginOptions.workspaceScope ?? {};
     } else if (scope.multiselect) {
-        combinedFlags = pluginFlags.multiselectScope ?? {};
+        scopedOptions = pluginOptions.multiselectScope ?? {};
     }
 
-    // Compile a list of options available to us (based on the scope type and plugin flags)
-    let options: CustomContextMenuOption[] = [];
-    for (const [key, value] of Object.entries(combinedFlags)) {
-        // Skip disabled options if hideDisabledMenuItems is true
-        if (pluginFlags.hideDisabledMenuItems && !value) continue;
-        options.push(...getOptions(plugin, scope, key));
+    // Build the list of context menu options based on the plugin's options
+    let menuOptions: CustomContextMenuOption[] = [];
+    for (const [key, value] of Object.entries(scopedOptions)) {
+        // Skip disabled options if `hideDisabledMenuItems` is true
+        if (pluginOptions.hideDisabledMenuItems && !value) continue;
+        menuOptions.push(...getOptions(plugin, scope, key));
     }
 
     // Sort menu options by weight and sort key
-    options = options.sort((a, b) => {
+    menuOptions = menuOptions.sort((a, b) => {
         // First, compare by weight
         if (a.weight < b.weight) return -1;
         if (a.weight > b.weight) return 1;
@@ -107,10 +154,10 @@ export function createMenuOptions(plugin: MultiselectPlugin, scope: CombinedScop
         return a.sort.toString().localeCompare(b.sort.toString());
     });
 
-    // Insert separators between options with different weights
-    for (let i = options.length - 1; i > 0; i--) {
-        if (options[i - 1].weight < options[i].weight) {
-            options.splice(i, 0, {
+    // Insert a separator between groups of menu entries at the point where their weights differ
+    for (let i = menuOptions.length - 1; i > 0; i--) {
+        if (menuOptions[i - 1].weight < menuOptions[i].weight) {
+            menuOptions.splice(i, 0, {
                 sort: "none", // never used
                 text: getItemSeparator(),
                 enabled: true,
@@ -121,7 +168,7 @@ export function createMenuOptions(plugin: MultiselectPlugin, scope: CombinedScop
         }
     }
 
-    return options;
+    return menuOptions;
 }
 
 function getItemSeparator(): HTMLElement {
@@ -144,12 +191,15 @@ export function getItemText(name: string): HTMLElement | string {
 }
 
 export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, optionName: string): CustomContextMenuOption[] {
-    const pluginFlags = plugin.getOptions();
+    // TODO: Rename all instances of `pluginFlags` to `pluginOptions` or something similar
+    // const pluginFlags = plugin.getOptions();
+    const optionsMgr = OptionsMgr.getInstance();
+    const pluginFlags = optionsMgr.getOptions();
     const options: CustomContextMenuOption[] = [];
 
     if (scope.block) {
         switch (optionName) {
-            case BlockScopeFlagKeys.comment:
+            case "comment":
                 // Expected interface properties can be found here:
                 // https://github.com/google/blockly/blob/71185b5582401cd499f0e4a8ed444e7c4d531580/core/contextmenu_registry.ts#L148
                 options.push({
@@ -173,7 +223,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.uncomment],
                 });
                 break;
-            case BlockScopeFlagKeys.copy:
+            case "copy":
                 options.push({
                     sort: MenuItemLabels.copy,
                     text: getItemText(MenuItemLabels.copy),
@@ -185,7 +235,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.copy],
                 });
                 break;
-            case BlockScopeFlagKeys.deletable:
+            case "deletable":
                 options.push({
                     sort: MenuItemLabels.set_deletable,
                     text: getItemText(MenuItemLabels.set_deletable),
@@ -207,7 +257,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.set_undeletable],
                 });
                 break;
-            case BlockScopeFlagKeys.delete:
+            case "delete":
                 options.push({
                     sort: MenuItemLabels.delete,
                     text: getItemText(MenuItemLabels.delete),
@@ -219,7 +269,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.delete],
                 });
                 break;
-            case BlockScopeFlagKeys.duplicate:
+            case "duplicate":
                 options.push({
                     sort: MenuItemLabels.duplicate,
                     text: getItemText(MenuItemLabels.duplicate),
@@ -231,7 +281,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.duplicate],
                 });
                 break;
-            case BlockScopeFlagKeys.editable:
+            case "editable":
                 options.push({
                     sort: MenuItemLabels.set_editable,
                     text: getItemText(MenuItemLabels.set_editable),
@@ -253,7 +303,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.set_uneditable],
                 });
                 break;
-            case BlockScopeFlagKeys.expand:
+            case "expand":
                 options.push({
                     sort: MenuItemLabels.collapse,
                     text: getItemText(MenuItemLabels.collapse),
@@ -275,7 +325,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.expand],
                 });
                 break;
-            case BlockScopeFlagKeys.help:
+            case "help":
                 options.push({
                     sort: MenuItemLabels.help,
                     text: getItemText(MenuItemLabels.help),
@@ -287,7 +337,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.help],
                 });
                 break;
-            case BlockScopeFlagKeys.inline:
+            case "inline":
                 options.push({
                     sort: MenuItemLabels.inline,
                     text: getItemText(MenuItemLabels.inline),
@@ -309,7 +359,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.external],
                 });
                 break;
-            case BlockScopeFlagKeys.movable:
+            case "movable":
                 options.push({
                     sort: MenuItemLabels.set_movable,
                     text: getItemText(MenuItemLabels.set_movable),
@@ -336,7 +386,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
         }
     } else if (scope.workspace) {
         switch (optionName) {
-            case WorkspaceScopeFlagKeys.cleanup:
+            case "cleanup":
                 options.push({
                     sort: MenuItemLabels.cleanup_all,
                     text: getItemText(MenuItemLabels.cleanup_all),
@@ -348,7 +398,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.cleanup_all],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.delete:
+            case "delete":
                 options.push({
                     sort: MenuItemLabels.delete_all,
                     text: getItemText(MenuItemLabels.delete_all),
@@ -360,7 +410,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.delete_all],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.expand:
+            case "expand":
                 options.push({
                     sort: MenuItemLabels.expand_all,
                     text: getItemText(MenuItemLabels.expand_all),
@@ -382,7 +432,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.collapse_all],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.help:
+            case "help":
                 options.push({
                     sort: MenuItemLabels.help,
                     text: getItemText(MenuItemLabels.help),
@@ -394,7 +444,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.help],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.paste:
+            case "paste":
                 options.push({
                     sort: MenuItemLabels.paste,
                     text: getItemText(MenuItemLabels.paste),
@@ -406,7 +456,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.paste],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.redo:
+            case "redo":
                 options.push({
                     sort: MenuItemLabels.redo,
                     text: getItemText(MenuItemLabels.redo),
@@ -418,7 +468,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.redo],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.reset:
+            case "reset":
                 options.push({
                     sort: MenuItemLabels.reset,
                     text: getItemText(MenuItemLabels.reset),
@@ -430,7 +480,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.reset],
                 });
                 break;
-            case WorkspaceScopeFlagKeys.select:
+            case "select":
                 options.push({
                     sort: MenuItemLabels.select_all,
                     text: getItemText(MenuItemLabels.select_all),
@@ -442,7 +492,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.select_all],
                 });
                 break;                
-            case WorkspaceScopeFlagKeys.undo:
+            case "undo":
                 options.push({
                     sort: MenuItemLabels.undo,
                     text: getItemText(MenuItemLabels.undo),
@@ -459,7 +509,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
         }
     } else if (scope.multiselect) {
         switch (optionName) {
-            case MultiScopeFlagKeys.cleanup:
+            case "cleanup":
                 options.push({
                     sort: MenuItemLabels.cleanup,
                     text: getItemText(MenuItemLabels.cleanup),
@@ -471,7 +521,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.cleanup],
                 });
                 break;
-            case MultiScopeFlagKeys.comment:
+            case "comment":
                 options.push({
                     sort: MenuItemLabels.comment,
                     text: getItemText(MenuItemLabels.comment),
@@ -493,7 +543,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.uncomment],
                 });
                 break;
-            case MultiScopeFlagKeys.copy:
+            case "copy":
                 options.push({
                     sort: MenuItemLabels.copy,
                     text: getItemText(MenuItemLabels.copy),
@@ -505,7 +555,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.copy],
                 });
                 break;
-            case MultiScopeFlagKeys.duplicate:
+            case "duplicate":
                 options.push({
                     sort: MenuItemLabels.duplicate,
                     text: getItemText(MenuItemLabels.duplicate),
@@ -517,7 +567,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.duplicate],
                 });
                 break;
-            case MultiScopeFlagKeys.delete:
+            case "delete":
                 options.push({
                     sort: MenuItemLabels.delete,
                     text: getItemText(MenuItemLabels.delete),
@@ -529,7 +579,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.delete],
                 });
                 break;
-            case MultiScopeFlagKeys.editable:
+            case "editable":
                 options.push({
                     sort: MenuItemLabels.set_editable,
                     text: getItemText(MenuItemLabels.set_editable),
@@ -551,7 +601,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.set_uneditable],
                 });
                 break;
-            case MultiScopeFlagKeys.expand:
+            case "expand":
                 options.push({
                     sort: MenuItemLabels.expand,
                     text: getItemText(MenuItemLabels.expand),
@@ -573,7 +623,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.collapse],
                 });
                 break;
-            case MultiScopeFlagKeys.deletable:
+            case "deletable":
                 options.push({
                     sort: MenuItemLabels.set_deletable,
                     text: getItemText(MenuItemLabels.set_deletable),
@@ -595,7 +645,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.set_undeletable],
                 });
                 break;
-            case MultiScopeFlagKeys.inline:
+            case "inline":
                 options.push({
                     sort: MenuItemLabels.inline,
                     text: getItemText(MenuItemLabels.inline),
@@ -617,7 +667,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.external],
                 });
                 break;
-            case MultiScopeFlagKeys.movable:
+            case "movable":
                 options.push({
                     sort: MenuItemLabels.set_movable,
                     text: getItemText(MenuItemLabels.set_movable),
@@ -639,7 +689,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.set_unmovable],
                 });
                 break;
-            case MultiScopeFlagKeys.paste:
+            case "paste":
                 options.push({
                     sort: MenuItemLabels.paste,
                     text: getItemText(MenuItemLabels.paste),
@@ -651,7 +701,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.paste],
                 });
                 break;
-            case MultiScopeFlagKeys.redo:
+            case "redo":
                 options.push({
                     sort: MenuItemLabels.redo,
                     text: getItemText(MenuItemLabels.redo),
@@ -663,7 +713,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.redo],
                 });
                 break;
-            case MultiScopeFlagKeys.reset:
+            case "reset":
                 options.push({
                     sort: MenuItemLabels.reset,
                     text: getItemText(MenuItemLabels.reset),
@@ -675,7 +725,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.reset],
                 });
                 break;
-            case MultiScopeFlagKeys.select:
+            case "select":
                 options.push({
                     sort: MenuItemLabels.select_all,
                     text: getItemText(MenuItemLabels.select_all),
@@ -687,7 +737,7 @@ export function getOptions(plugin: MultiselectPlugin, scope: CombinedScope, opti
                     weight: weights[MenuItemLabels.select_all],
                 });
                 break;
-            case MultiScopeFlagKeys.undo:
+            case "undo":
                 options.push({
                     sort: MenuItemLabels.undo,
                     text: getItemText(MenuItemLabels.undo),

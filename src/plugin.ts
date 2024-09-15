@@ -1,9 +1,9 @@
 import * as Blockly from "blockly/core";
-import { customShowContextMenu } from "./menus";
-import { CombinedScope, PluginFlags, BlockScopeFlagKeys, WorkspaceScopeFlagKeys, MultiScopeFlagKeys } from "./types";
+import { customShowContextMenu, CombinedScope } from "./menus";
 import * as api from "./api";
-import { deepMerge } from "./util";
 import { multiselectStyles } from "./styles";
+
+import { OptionsMgr } from "./options";
 
 declare global {
      interface Window {
@@ -16,7 +16,7 @@ export class MultiselectPlugin {
     static pasteOffset = 20;
     static deleteCodes: string[] = ["Delete", "Backspace"];
 
-    public options: PluginFlags;
+    // public options: PluginFlags;
 
     protected blockly: typeof Blockly;
     protected workspace: Blockly.WorkspaceSvg;
@@ -38,60 +38,9 @@ export class MultiselectPlugin {
 
     protected copiedBlocks: object[]; // Temporary copy+paste storage for serialized blocks
 
-    constructor(options: PluginFlags, workspace: Blockly.WorkspaceSvg, blockly = Blockly) {
+    constructor(workspace: Blockly.WorkspaceSvg, blockly = Blockly) {
         this.workspace = workspace;
         this.blockly = blockly;        
-        
-        // Merge default options with user-provided options, resulting in the "effective" options
-        this.options = {
-            copyPasteToStorage: true,
-            copyPasteToClipboard: true,
-            hideDisabledMenuItems: true,
-            enableBlockMenu: true,
-            enableWorkspaceMenu: true,
-            blockScope: {
-                [BlockScopeFlagKeys.comment]: true,
-                [BlockScopeFlagKeys.copy]: true,
-                [BlockScopeFlagKeys.deletable]: true,
-                [BlockScopeFlagKeys.delete]: true,
-                [BlockScopeFlagKeys.duplicate]: true,
-                [BlockScopeFlagKeys.editable]: true,
-                [BlockScopeFlagKeys.expand]: true,
-                [BlockScopeFlagKeys.help]: true,
-                [BlockScopeFlagKeys.inline]: true,
-                [BlockScopeFlagKeys.movable]: true,
-            },
-            workspaceScope: {
-                [WorkspaceScopeFlagKeys.cleanup]: true,
-                [WorkspaceScopeFlagKeys.delete]: true,
-                [WorkspaceScopeFlagKeys.expand]: true,
-                [WorkspaceScopeFlagKeys.help]: true,
-                [WorkspaceScopeFlagKeys.paste]: true,
-                [WorkspaceScopeFlagKeys.redo]: true,
-                [WorkspaceScopeFlagKeys.reset]: true,
-                [WorkspaceScopeFlagKeys.select]: true,
-                [WorkspaceScopeFlagKeys.undo]: true,
-            },
-            multiselectScope: {
-                [MultiScopeFlagKeys.cleanup]: true,
-                [MultiScopeFlagKeys.comment]: true,
-                [MultiScopeFlagKeys.copy]: true,
-                [MultiScopeFlagKeys.deletable]: true,
-                [MultiScopeFlagKeys.delete]: true,
-                [MultiScopeFlagKeys.duplicate]: true,
-                [MultiScopeFlagKeys.editable]: true,
-                [MultiScopeFlagKeys.expand]: true,
-                [MultiScopeFlagKeys.inline]: true,
-                [MultiScopeFlagKeys.movable]: true,
-                [MultiScopeFlagKeys.paste]: true,
-                [MultiScopeFlagKeys.redo]: true,
-                [MultiScopeFlagKeys.reset]: true,
-                [MultiScopeFlagKeys.select]: true,
-                [MultiScopeFlagKeys.undo]: true,
-            },
-        };
-        deepMerge(this.options, options);
-
     }
 
     async init() {
@@ -186,9 +135,9 @@ export class MultiselectPlugin {
         });
     }
 
-    getOptions(): PluginFlags {
-        return this.options;
-    }
+    // getOptions(): PluginFlags {
+    //     return this.options;
+    // }
 
     getSelected(): string[] {
         return Array.from<string>(this.multiselectIds);
@@ -199,6 +148,7 @@ export class MultiselectPlugin {
     }
 
     protected handleBackgroundClicked(e: PointerEvent) {
+        const options = OptionsMgr.getInstance().getOptions();
         if (Blockly.browserEvents.isRightButton(e)) {
             // Handle right-click on background
             if (this.numSelected() > 0) {
@@ -209,8 +159,8 @@ export class MultiselectPlugin {
                 });
                 const scope: CombinedScope = { multiselect: blocks };
                 customShowContextMenu(this, e, scope);
-                e.stopPropagation();
-            } else if (this.options.enableWorkspaceMenu) {
+                e.stopPropagation();  
+            } else if (options.enableWorkspaceMenu) {
                 // Show custom workspace menu
                 e.stopPropagation(); // Call first, in case we throw error
 

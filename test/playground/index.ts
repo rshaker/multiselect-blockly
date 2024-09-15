@@ -1,32 +1,33 @@
 import * as Blockly from "blockly";
 import { toolboxCategories, createPlayground } from "@blockly/dev-tools";
-import { MultiselectPlugin, PluginFlags } from "../../src/index";
+import { MultiselectPlugin, OptionsMgr } from "../../src/index";
 
 function createWorkspace(blocklyDiv: HTMLElement, options: Blockly.BlocklyOptions): Blockly.WorkspaceSvg {
-    const pluginOptions: PluginFlags = {
-        copyPasteToStorage: true, // Use local storage to persist copied blocks between sessions and across tabs
-        copyPasteToClipboard: true, // `false` prevents use of system clipboard
-        hideDisabledMenuItems: false, // `false` greys out disabled menu options, `true` hides them completely
-        enableBlockMenu: true, // Adds a custom context menu for blocks (only when multiselect is active)
+    const optionsMgr = OptionsMgr.getInstance()
+    optionsMgr.setOptions({
+        copyPasteToStorage: true,
+        copyPasteToClipboard: true,
+        hideDisabledMenuItems: false,
+        enableBlockMenu: true,
         blockScope: {
-            // undo: true,
+            // movable: true,
         },
-        enableWorkspaceMenu: true, // Replaces Blockly's default workspace context menu
+        enableWorkspaceMenu: true,
         workspaceScope: {
-            // undo: true,
+            // select: false,
         },
         multiselectScope: {
-            comment: false,
+            // comment: false,
         },
-    };
-
+    });
     const workspace = Blockly.inject(blocklyDiv, options);
-    const plugin = new MultiselectPlugin(pluginOptions, workspace);
+    const plugin = new MultiselectPlugin(workspace);
     plugin.init();
 
     return workspace;
 }
 
+// Triggers the call to createWorkspace
 document.addEventListener("DOMContentLoaded", function () {
     const defaultOptions = {
         toolbox: toolboxCategories,

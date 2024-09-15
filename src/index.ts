@@ -1,3 +1,3 @@
 export * from './plugin';
 export * from './api';
-export * from './types';
+export * from './options';

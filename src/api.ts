@@ -40,9 +40,12 @@ export function doCollapse(plugin: MultiselectPlugin, blockId: string, collapse:
 export function doCollapseAll(plugin: MultiselectPlugin, isCollapsed: boolean) {
     const blockly = plugin.getBlockly();
     blockly.Events.setGroup(true);
-    plugin.getWorkspace().getAllBlocks().forEach((block) => {
-        block.setCollapsed(isCollapsed);
-    });
+    plugin
+        .getWorkspace()
+        .getAllBlocks()
+        .forEach((block) => {
+            block.setCollapsed(isCollapsed);
+        });
     blockly.Events.setGroup(false);
 }
 
@@ -127,10 +130,13 @@ export function doDelete(plugin: MultiselectPlugin, blockId: string) {
 export function doDeleteAll(plugin: MultiselectPlugin) {
     const blockly = plugin.getBlockly();
     blockly.Events.setGroup(true);
-    plugin.getWorkspace().getAllBlocks().forEach((block) => {
-        plugin.removeSelected(block.id);
-        block.dispose();
-    });
+    plugin
+        .getWorkspace()
+        .getAllBlocks()
+        .forEach((block) => {
+            plugin.removeSelected(block.id);
+            block.dispose();
+        });
     blockly.Events.setGroup(false);
 }
 
@@ -215,6 +221,231 @@ export function doUndo(plugin: MultiselectPlugin) {
 
 export function getNumSelected(plugin: MultiselectPlugin) {
     return plugin.getSelected().length;
+}
+
+
+
+
+/** 
+TODO: Define interfaces to enforce the overall structure of the metatadata structures.
+*/
+
+type MetadataType = "boolean" | "number" | "string" | "object";
+
+interface Metadata {
+  desc: string;
+  help: string;
+  type: MetadataType;
+}
+
+interface MetadataStructure {
+  [key: string]: Metadata | MetadataStructure;
+}
+
+export function getPluginOptions(): MetadataStructure {
+    return {
+        copyPasteToStorage: {
+            desc: "Copy and paste to storage",
+            help: "Copy and paste blocks to and from storage.",
+            type: "boolean",
+        },
+        copyPasteToClipboard: {
+            desc: "Copy and paste to clipboard",
+            help: "Copy and paste blocks to and from the clipboard.",
+            type: "boolean",
+        },
+        hideDisabledMenuItems: {
+            desc: "Hide disabled menu items",
+            help: "Hide menu items that are disabled.",
+            type: "boolean",
+        },
+        enableBlockMenu: {
+            desc: "Enable block menu",
+            help: "Enable the block menu.",
+            type: "boolean",
+        },
+        enableWorkspaceMenu: {
+            desc: "Enable workspace menu",
+            help: "Enable the workspace menu.",
+            type: "boolean",
+        },
+        blockScope: {
+            comment: {
+                desc: "Comment",
+                help: "Add a comment to the block.",
+                type: "boolean",
+            },
+            copy: {
+                desc: "Copy",
+                help: "Copy the block.",
+                type: "boolean",
+            },
+            deletable: {
+                desc: "Deletable",
+                help: "Allow the block to be deleted.",
+                type: "boolean",
+            },
+            delete: {
+                desc: "Delete",
+                help: "Delete the block.",
+                type: "boolean",
+            },
+            duplicate: {
+                desc: "Duplicate",
+                help: "Duplicate the block.",
+                type: "boolean",
+            },
+            editable: {
+                desc: "Editable",
+                help: "Allow the block to be edited.",
+                type: "boolean",
+            },
+            expand: {
+                desc: "Expand",
+                help: "Expand the block.",
+                type: "boolean",
+            },
+            help: {
+                desc: "Help",
+                help: "Show help for the block.",
+                type: "boolean",
+            },
+            inline: {
+                desc: "Inline",
+                help: "Inline the block.",
+                type: "boolean",
+            },
+            movable: {
+                desc: "Movable",
+                help: "Allow the block to be moved.",
+                type: "boolean",
+            },
+        },
+        workspaceScope: {
+            cleanup: {
+                desc: "Cleanup",
+                help: "Clean up the workspace.",
+                type: "boolean",
+            },
+            delete: {
+                desc: "Delete",
+                help: "Delete the block.",
+                type: "boolean",
+            },
+            expand: {
+                desc: "Expand",
+                help: "Expand the block.",
+                type: "boolean",
+            },
+            help: {
+                desc: "Help",
+                help: "Show help for the block.",
+                type: "boolean",
+            },
+            paste: {
+                desc: "Paste",
+                help: "Paste the block.",
+                type: "boolean",
+            },
+            redo: {
+                desc: "Redo",
+                help: "Redo the last action.",
+                type: "boolean",
+            },
+            reset: {
+                desc: "Reset",
+                help: "Reset the workspace.",
+                type: "boolean",
+            },
+            select: {
+                desc: "Select",
+                help: "Select the block.",
+                type: "boolean",
+            },
+            undo: {
+                desc: "Undo",
+                help: "Undo the last action.",
+                type: "boolean",
+            },
+        },
+        MultiScope: {
+            cleanup: {
+                desc: "Cleanup",
+                help: "Clean up the workspace.",
+                type: "boolean",
+            },
+            comment: {
+                desc: "Comment",
+                help: "Add a comment to the block.",
+                type: "boolean",
+            },
+            copy: {
+                desc: "Copy",
+                help: "Copy the block.",
+                type: "boolean",
+            },
+            deletable: {
+                desc: "Deletable",
+                help: "Allow the block to be deleted.",
+                type: "boolean",
+            },
+            delete: {
+                desc: "Delete",
+                help: "Delete the block.",
+                type: "boolean",
+            },
+            duplicate: {
+                desc: "Duplicate",
+                help: "Duplicate the block.",
+                type: "boolean",
+            },
+            editable: {
+                desc: "Editable",
+                help: "Allow the block to be edited.",
+                type: "boolean",
+            },
+            expand: {
+                desc: "Expand",
+                help: "Expand the block.",
+                type: "boolean",
+            },
+            inline: {
+                desc: "Inline",
+                help: "Inline the block.",
+                type: "boolean",
+            },
+            movable: {
+                desc: "Movable",
+                help: "Allow the block to be moved.",
+                type: "boolean",
+            },
+            paste: {
+                desc: "Paste",
+                help: "Paste the block.",
+                type: "boolean",
+            },
+            redo: {
+                desc: "Redo",
+                help: "Redo the last action.",
+                type: "boolean",
+            },
+            reset: {
+                desc: "Reset",
+                help: "Reset the workspace.",
+                type: "boolean",
+            },
+            select: {
+                desc: "Select",
+                help: "Select the block.",
+                type: "boolean",
+            },
+            undo: {
+                desc: "Undo",
+                help: "Undo the last action.",
+                type: "boolean",
+            },
+        },
+    };
 }
 
 export function setEditable(plugin: MultiselectPlugin, blockId: string, editable: boolean) {

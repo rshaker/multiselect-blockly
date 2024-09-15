@@ -1,0 +1,302 @@
+{
+    "blockRecon": [
+        {
+            "boundingRect": {
+                "top": 88,
+                "bottom": 125,
+                "left": 95,
+                "right": 238.30349731445312
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 95,
+                "y": 88
+            },
+            "screenCoords": {
+                "x": 202.0000000000001,
+                "y": 88.00000000000006
+            },
+            "centerCoords": {
+                "x": 273.65174865722656,
+                "y": 106.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 197,
+                "bottom": 234,
+                "left": 101,
+                "right": 241.96560668945312
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 101,
+                "y": 197
+            },
+            "screenCoords": {
+                "x": 208.0000000000001,
+                "y": 197.00000000000006
+            },
+            "centerCoords": {
+                "x": 278.48280334472656,
+                "y": 215.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 102,
+                "bottom": 177,
+                "left": 247,
+                "right": 408.89903259277344
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 247,
+                "y": 102
+            },
+            "screenCoords": {
+                "x": 354.0000000000001,
+                "y": 102.00000000000006
+            },
+            "centerCoords": {
+                "x": 434.94952392578125,
+                "y": 139.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 313,
+                "bottom": 378,
+                "left": 157,
+                "right": 325.54969787597656
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 157,
+                "y": 313
+            },
+            "screenCoords": {
+                "x": 264.0000000000001,
+                "y": 313.00000000000006
+            },
+            "centerCoords": {
+                "x": 348.27484130859375,
+                "y": 345.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 423,
+                "bottom": 510,
+                "left": 79,
+                "right": 651.8434143066406
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 79,
+                "y": 423
+            },
+            "screenCoords": {
+                "x": 186.0000000000001,
+                "y": 423.00000000000006
+            },
+            "centerCoords": {
+                "x": 472.42169189453125,
+                "y": 466.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 58,
+                "bottom": 134,
+                "left": 505,
+                "right": 720.4695434570312
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 505,
+                "y": 58
+            },
+            "screenCoords": {
+                "x": 612.0000000000001,
+                "y": 58.00000000000006
+            },
+            "centerCoords": {
+                "x": 719.7347717285156,
+                "y": 96
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 321,
+                "bottom": 397,
+                "left": 603,
+                "right": 818.4695434570312
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 603,
+                "y": 321
+            },
+            "screenCoords": {
+                "x": 710.0000000000001,
+                "y": 321.00000000000006
+            },
+            "centerCoords": {
+                "x": 817.7347717285156,
+                "y": 359
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 637,
+                "bottom": 724,
+                "left": 146,
+                "right": 726.9965972900391
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 146,
+                "y": 637
+            },
+            "screenCoords": {
+                "x": 253.0000000000001,
+                "y": 637
+            },
+            "centerCoords": {
+                "x": 543.498291015625,
+                "y": 680.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 573,
+                "bottom": 610,
+                "left": 412,
+                "right": 785.5270538330078
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 412,
+                "y": 573
+            },
+            "screenCoords": {
+                "x": 519.0000000000001,
+                "y": 573
+            },
+            "centerCoords": {
+                "x": 705.7635192871094,
+                "y": 591.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 785,
+                "bottom": 822,
+                "left": 424,
+                "right": 797.5270538330078
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 424,
+                "y": 785
+            },
+            "screenCoords": {
+                "x": 531.0000000000001,
+                "y": 785
+            },
+            "centerCoords": {
+                "x": 717.7635192871094,
+                "y": 803.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 287,
+                "bottom": 339,
+                "left": 367,
+                "right": 529.5897979736328
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 367,
+                "y": 287
+            },
+            "screenCoords": {
+                "x": 474.0000000000001,
+                "y": 287.00000000000006
+            },
+            "centerCoords": {
+                "x": 555.2948913574219,
+                "y": 313
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 218,
+                "bottom": 255,
+                "left": 324,
+                "right": 645.1173248291016
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 324,
+                "y": 218
+            },
+            "screenCoords": {
+                "x": 431.0000000000001,
+                "y": 218.00000000000006
+            },
+            "centerCoords": {
+                "x": 591.5586547851562,
+                "y": 236.5
+            }
+        },
+        {
+            "boundingRect": {
+                "top": 859,
+                "bottom": 896,
+                "left": 77,
+                "right": 533.0220489501953
+            },
+            "isCollapsed": false,
+            "isTopLevel": true,
+            "relativeCoords": {
+                "x": 77,
+                "y": 859
+            },
+            "screenCoords": {
+                "x": 184.0000000000001,
+                "y": 859
+            },
+            "centerCoords": {
+                "x": 412.01104736328125,
+                "y": 877.5
+            }
+        }
+    ],
+    "workspaceRecon": {
+        "numSelected": 0,
+        "numCopied": 0,
+        "numBlocks": 29,
+        "numTopBlocks": 13,
+        "maxBoundingRect": {
+            "top": 58,
+            "bottom": 896,
+            "left": 77,
+            "right": 818.4695434570312
+        }
+    }
+}
