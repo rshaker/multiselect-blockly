@@ -44,7 +44,7 @@ jobs:
 
       # Disable all timeouts, and don't try to programmatically generate dom events because it won't work...
       - name: Run tests without Puppeteer
-        run: npm run test:no-pptr
+        run: npm run test
 
       - name: Build the artifact directory
         run: |
